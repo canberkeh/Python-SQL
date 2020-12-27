@@ -34,7 +34,6 @@ class Database():
             else:
                 print("Wrong choice")
                 continue
-            
 
     def menu_ask(self):
         ''' Keep asking after operations '''
@@ -55,7 +54,7 @@ class Database():
         print(f"Choose operation under {db_name}.")
         if db_name == "crypto":
             while True:
-                print("1- List Cryptos\n2- Save Single Data to DB")
+                print("\n1- List Cryptos\n2- Save Single Data to DB")
                 print("3- Save Multiple Data to DB\n4- Filter Datas")
                 print("5- Order Datas\n6- Delete Datas")
                 print("99- Exit")
@@ -84,6 +83,7 @@ class Database():
                     continue
 
     def list_crypto(self, connection):
+        '''List Crypto Datas'''
         cursor = connection.cursor()
         cursor.execute('Select * From crypto_currencies')
         data_list = cursor.fetchall()
@@ -91,6 +91,7 @@ class Database():
             print(f"ID: {data[0]}, Name: {data[1]}, Symbol: {data[2]}, Category: {data[3]}")
 
     def single_data(self, connection, db_name):
+        ''' Add single data to sql '''
         print("There are 3 column here. Crypto Name, Symbol, Category")
         crypto_name = input("Crypto name : ")
         symbol = input("Symbol : ")
@@ -110,6 +111,7 @@ class Database():
             print(f"Added to {db_name}.\n")
 
     def multiple_data(self, connection, db_name):
+        ''' Add multiple datas to sql '''
         data_list = []
         while True:
             cursor = connection.cursor()
@@ -137,6 +139,7 @@ class Database():
             print(f"Added to {db_name}.\n")
 
     def filter_crypto(self, connection):
+        ''' filter by given queries '''
         cursor = connection.cursor()
         while True:
             print("1- ID\n2- Name\n3- Symbol")
@@ -176,6 +179,7 @@ class Database():
                 continue
 
     def order_by(self, connection):
+        ''' order by given queries '''
         cursor = connection.cursor()
         order = {
             "1": "id",
@@ -199,6 +203,7 @@ class Database():
                 continue
 
     def delete_crypto(self, connection):
+        ''' delete '''
         cursor = connection.cursor()
         delete_by = {
             "1": "id",
@@ -219,23 +224,19 @@ class Database():
                 try:
                     connection.commit()
                     print(f"{cursor.rowcount} data deleted.")
-                except:
-                    print("Error! ")
+                except mysql.connector.Error as err:
+                    print("Error! ", err)
                 finally:
                     connection.close()
                     print("Deleted. DB Closing.\n")
-                    break
+                break
             else:
                 continue
 
-    def server_operations(cls, given_password):
+    def server_operations(self, given_password):
+        ''' returns connection '''
         connection = mysql.connector.connect(host = "localhost", user = "root", password = given_password)
         return connection
-
-    def crypto_currencies(self):
-        ''' Connection to the server with given inputs before.'''
-        connection = mysql.connector.connect(host = "localhost", user = "root", password = given_password, database = db_name)
-        print("Connection Successful!", connection)
 
     def create_database(self):
         ''' Create new database on localhost '''
@@ -245,22 +246,15 @@ class Database():
         print(f"Database '{database_name}' created.\n")
         self.menu_ask()
 
-    @classmethod
-    def list_databases(cls, connection):
+    def list_databases(self, connection):
         ''' List of databases '''
         cursor = connection.cursor()# get the cursor
         cursor.execute("SHOW DATABASES") # select the database
         print("--- Databases ---")
         for (database_name,) in cursor:
             print(database_name,)
-        # cursor.execute("SHOW TABLES")
-        # print("--- Tables ---")
-        # for (table_name,) in cursor:
-        #     print(table_name)
+        print("\n")
+        self.menu_ask()
 
-    def create_table(self):
-        cursor = connection.cursor()# get the cursor
-        table_name = input("Table Name : ")
-        connection.cursor().execute("CREATE TABLE schooldb(name VARCHAR(255), address VARCHAR(255))")
 class_start = Database()
 class_start.choices()
