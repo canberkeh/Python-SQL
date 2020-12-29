@@ -1,0 +1,2 @@
+sql = "SELECT crypto_currencies.crypto_name, crypto_currencies.symbol, category.name From crypto_currencies inner join category on category.id=crypto_currencies.categoryid"
+# May connect tables and use code for listing connected tables. Can use shorthand like crypto_currencies as c or categories as ca.

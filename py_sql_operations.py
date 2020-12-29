@@ -238,7 +238,7 @@ class Database():
         connection = mysql.connector.connect(host = "localhost", user = "root", password = given_password)
         return connection
 
-    def create_database(self):
+    def create_database(self, connection):
         ''' Create new database on localhost '''
         # self.server_connection(self.database_choice.get(choice), given_password)
         database_name = input("Please enter database name: ")
